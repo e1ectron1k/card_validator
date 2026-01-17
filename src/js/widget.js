@@ -1,16 +1,8 @@
-/**
- * Виджет для валидации банковских карт
- * UI компонент для взаимодействия с пользователем
- */
-
 import { isValidCardNumber, formatCardNumber, cleanCardNumber } from './validators.js';
 import { detectPaymentSystem, getAllPaymentSystems } from './paymentSystems.js';
 
 export default class CreditCardWidget {
-    /**
-     * Создает экземпляр виджета
-     * @param {HTMLElement} parentEl - Родительский элемент для виджета
-     */
+
     constructor(parentEl) {
         this.parentEl = parentEl;
         this.currentCardNumber = '';
@@ -29,10 +21,6 @@ export default class CreditCardWidget {
         };
     }
 
-    /**
-     * Статический геттер для разметки виджета
-     * @returns {string} HTML разметка
-     */
     static get markup() {
         return `
             <div class="credit-card-widget fade-in">
@@ -137,24 +125,17 @@ export default class CreditCardWidget {
         `;
     }
 
-    /**
-     * Привязывает виджет к DOM и инициализирует обработчики событий
-     */
     bindToDOM() {
         this.parentEl.innerHTML = this.constructor.markup;
         this.initElements();
         this.bindEvents();
         this.loadExamples();
         
-        // Фокус на поле ввода
         setTimeout(() => {
             this.cardInput.focus();
         }, 100);
     }
 
-    /**
-     * Инициализирует DOM элементы виджета
-     */
     initElements() {
         this.cardInput = this.parentEl.querySelector('[data-id="card-input"]');
         this.clearBtn = this.parentEl.querySelector('[data-id="clear-btn"]');
@@ -172,44 +153,34 @@ export default class CreditCardWidget {
         this.exampleButtons = this.parentEl.querySelector('#example-buttons');
     }
 
-    /**
-     * Привязывает обработчики событий
-     */
     bindEvents() {
-        // Автоформатирование при вводе
         this.cardInput.addEventListener('input', (e) => {
             this.handleInput(e);
         });
         
-        // Валидация при потере фокуса
         this.cardInput.addEventListener('blur', () => {
             if (this.cardInput.value.trim()) {
                 this.validateAndUpdate();
             }
         });
         
-        // Кнопка очистки
         this.clearBtn.addEventListener('click', () => {
             this.clearForm();
         });
         
-        // Кнопка вставки
         this.pasteBtn.addEventListener('click', () => {
             this.pasteFromClipboard();
         });
         
-        // Кнопка форматирования
         this.formatBtn.addEventListener('click', () => {
             this.formatCardNumber();
         });
         
-        // Отправка формы
         this.form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.validateAndUpdate();
         });
         
-        // Быстрые клавиши
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'v' && document.activeElement !== this.cardInput) {
                 this.pasteFromClipboard();
@@ -221,39 +192,26 @@ export default class CreditCardWidget {
         });
     }
 
-    /**
-     * Обрабатывает ввод в поле номера карты
-     * @param {Event} e - Событие input
-     */
     handleInput(e) {
         let value = e.target.value.replace(/\D/g, '');
-        value = value.substring(0, 19); // Максимальная длина 19 цифр
+        value = value.substring(0, 19); 
         
-        // Форматируем с пробелами каждые 4 цифры
         const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
         e.target.value = formatted;
         
-        // Обновляем отображение
         this.updateCardPreview(value);
         this.detectPaymentSystem(value);
         
-        // Сохраняем текущий номер
         this.currentCardNumber = value;
     }
 
-    /**
-     * Обновляет предварительный просмотр карты
-     * @param {string} cardNumber - Номер карты (только цифры)
-     */
     updateCardPreview(cardNumber) {
         let display = '#### #### #### ####';
         
         if (cardNumber) {
-            // Заменяем символы # на цифры
             for (let i = 0; i < cardNumber.length; i++) {
                 if (i < display.length) {
                     const displayArray = display.split('');
-                    // Пропускаем пробелы
                     let displayIndex = i;
                     while (displayArray[displayIndex] === ' ') {
                         displayIndex++;
@@ -268,48 +226,36 @@ export default class CreditCardWidget {
         
         this.cardNumberDisplay.textContent = display;
         
-        // Анимация обновления
         this.cardNumberDisplay.classList.remove('pulse');
-        void this.cardNumberDisplay.offsetWidth; // Trigger reflow
+        void this.cardNumberDisplay.offsetWidth;
         this.cardNumberDisplay.classList.add('pulse');
     }
 
-    /**
-     * Определяет и отображает платежную систему
-     * @param {string} cardNumber - Номер карты (только цифры)
-     */
     detectPaymentSystem(cardNumber) {
         const system = detectPaymentSystem(cardNumber);
         this.currentSystem = system;
         
         if (system) {
-            // Обновляем отображение системы
             this.systemResult.textContent = system.displayName;
             this.systemResult.className = 'result-value detected';
             
-            // Обновляем иконку
             this.paymentSystemLogo.innerHTML = `
                 <div class="system-logo" style="background: ${system.color}">
                     ${this.icons[system.icon] || this.icons.generic}
                 </div>
             `;
             
-            // Подсвечиваем поле ввода
             this.cardInput.classList.remove('invalid');
             this.cardInput.classList.add('valid');
         } else {
             this.systemResult.textContent = 'Не определена';
             this.systemResult.className = 'result-value unknown';
             this.paymentSystemLogo.innerHTML = '';
-            
-            // Сбрасываем подсветку
+
             this.cardInput.classList.remove('valid', 'invalid');
         }
     }
 
-    /**
-     * Проверяет валидность и обновляет интерфейс
-     */
     validateAndUpdate() {
         const cardNumber = cleanCardNumber(this.cardInput.value);
         
@@ -321,10 +267,8 @@ export default class CreditCardWidget {
         this.isValid = isValidCardNumber(cardNumber);
         const system = detectPaymentSystem(cardNumber);
         
-        // Обновляем результаты
         this.updateResults(cardNumber, this.isValid, system);
         
-        // Показываем сообщение
         if (this.isValid) {
             this.showSuccess('Карта валидна!');
         } else {
@@ -332,14 +276,7 @@ export default class CreditCardWidget {
         }
     }
 
-    /**
-     * Обновляет блок с результатами
-     * @param {string} cardNumber - Номер карты (только цифры)
-     * @param {boolean} isValid - Валидность карты
-     * @param {Object|null} system - Информация о платежной системе
-     */
     updateResults(cardNumber, isValid, system) {
-        // Валидность
         if (isValid) {
             this.validityResult.textContent = '✅ Валидна';
             this.validityResult.className = 'result-value valid';
@@ -348,7 +285,6 @@ export default class CreditCardWidget {
             this.validityResult.className = 'result-value invalid';
         }
         
-        // Платежная система
         if (system) {
             this.systemResult.textContent = system.displayName;
             this.systemResult.className = 'result-value detected';
@@ -357,22 +293,16 @@ export default class CreditCardWidget {
             this.systemResult.className = 'result-value unknown';
         }
         
-        // Длина
         this.lengthResult.textContent = `${cardNumber.length} цифр`;
         
-        // Форматированный номер
         this.formattedResult.textContent = formatCardNumber(cardNumber);
         
-        // Обновляем стиль поля ввода
         this.cardInput.classList.remove('valid', 'invalid');
         if (cardNumber) {
             this.cardInput.classList.add(isValid ? 'valid' : 'invalid');
         }
     }
 
-    /**
-     * Очищает форму
-     */
     clearForm() {
         this.cardInput.value = '';
         this.currentCardNumber = '';
@@ -393,9 +323,6 @@ export default class CreditCardWidget {
         this.cardInput.focus();
     }
 
-    /**
-     * Вставляет номер из буфера обмена
-     */
     async pasteFromClipboard() {
         try {
             const text = await navigator.clipboard.readText();
@@ -415,9 +342,6 @@ export default class CreditCardWidget {
         }
     }
 
-    /**
-     * Форматирует номер карты
-     */
     formatCardNumber() {
         const currentValue = this.cardInput.value;
         const formatted = formatCardNumber(currentValue);
@@ -429,9 +353,6 @@ export default class CreditCardWidget {
         }
     }
 
-    /**
-     * Загружает примеры карт
-     */
     loadExamples() {
         const examples = [
             { label: 'Visa', number: '4111111111111111' },
@@ -460,35 +381,20 @@ export default class CreditCardWidget {
         });
     }
 
-    /**
-     * Показывает сообщение об успехе
-     * @param {string} message - Текст сообщения
-     */
     showSuccess(message) {
         this.showNotification(message, 'success');
     }
 
-    /**
-     * Показывает сообщение об ошибке
-     * @param {string} message - Текст сообщения
-     */
     showError(message) {
         this.showNotification(message, 'error');
     }
 
-    /**
-     * Показывает уведомление
-     * @param {string} message - Текст сообщения
-     * @param {string} type - Тип сообщения (success/error)
-     */
     showNotification(message, type = 'info') {
-        // Удаляем старое уведомление
         const oldNotification = document.querySelector('.card-notification');
         if (oldNotification) {
             oldNotification.remove();
         }
         
-        // Создаем новое уведомление
         const notification = document.createElement('div');
         notification.className = `card-notification notification-${type}`;
         notification.innerHTML = `
@@ -496,7 +402,6 @@ export default class CreditCardWidget {
             <span>${message}</span>
         `;
         
-        // Стили для уведомления
         notification.style.cssText = `
             position: fixed;
             top: 20px;
@@ -513,10 +418,8 @@ export default class CreditCardWidget {
             animation: slideIn 0.3s ease;
         `;
         
-        // Добавляем в DOM
         document.body.appendChild(notification);
         
-        // Удаляем через 3 секунды
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.style.animation = 'slideOut 0.3s ease forwards';

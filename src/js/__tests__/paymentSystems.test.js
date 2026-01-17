@@ -1,7 +1,3 @@
-/**
- * Тесты для модуля определения платежных систем
- */
-
 import { detectPaymentSystem, getAllPaymentSystems, validateLengthForSystem } from '../src/js/paymentSystems';
 
 describe('Payment Systems Module', () => {
@@ -82,15 +78,15 @@ describe('Payment Systems Module', () => {
     describe('validateLengthForSystem', () => {
         test('должен проверять длину для Visa', () => {
             const visaSystem = detectPaymentSystem('4111111111111111');
-            expect(validateLengthForSystem('4111111111111111', visaSystem)).toBe(true); // 16 цифр
-            expect(validateLengthForSystem('4222222222222', visaSystem)).toBe(true); // 13 цифр
-            expect(validateLengthForSystem('411111111', visaSystem)).toBe(false); // 9 цифр
+            expect(validateLengthForSystem('4111111111111111', visaSystem)).toBe(true);
+            expect(validateLengthForSystem('4222222222222', visaSystem)).toBe(true);
+            expect(validateLengthForSystem('411111111', visaSystem)).toBe(false);
         });
 
         test('должен проверять длину для MasterCard', () => {
             const mastercardSystem = detectPaymentSystem('5555555555554444');
-            expect(validateLengthForSystem('5555555555554444', mastercardSystem)).toBe(true); // 16 цифр
-            expect(validateLengthForSystem('55555555', mastercardSystem)).toBe(false); // 8 цифр
+            expect(validateLengthForSystem('5555555555554444', mastercardSystem)).toBe(true);
+            expect(validateLengthForSystem('55555555', mastercardSystem)).toBe(false);
         });
 
         test('должен возвращать true если система не определена', () => {

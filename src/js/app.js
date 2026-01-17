@@ -1,30 +1,21 @@
-/**
- * Главный файл приложения
- * Инициализирует виджет валидации банковских карт
- */
-
 import '../css/style.css';
 import CreditCardWidget from './widget.js';
 
-// Инициализация приложения
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Приложение валидатора банковских карт запущено');
     
-    // Ищем контейнер для виджета
     const widgetContainer = document.getElementById('credit-card-widget');
     
     if (widgetContainer) {
         try {
-            // Создаем и инициализируем виджет
             const widget = new CreditCardWidget(widgetContainer);
             widget.bindToDOM();
             
             console.log('✅ Виджет успешно инициализирован');
             
-            // Добавляем глобальные стили для анимаций
             addGlobalStyles();
             
-            // Показываем информационное сообщение
             setTimeout(() => {
                 widget.showSuccess('Виджет готов к работе! Введите номер карты для проверки');
             }, 500);
@@ -45,9 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/**
- * Добавляет глобальные стили для анимаций
- */
 function addGlobalStyles() {
     const style = document.createElement('style');
     style.textContent = `
@@ -107,5 +95,4 @@ function addGlobalStyles() {
     document.head.appendChild(style);
 }
 
-// Экспортируем виджет для возможного использования в других модулях
 export { CreditCardWidget };

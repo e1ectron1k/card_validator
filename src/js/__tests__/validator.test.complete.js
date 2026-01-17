@@ -1,7 +1,3 @@
-/**
- * Тесты для модуля валидации
- */
-
 import { isValidCardNumber, formatCardNumber, cleanCardNumber } from '../src/js/validators';
 
 describe('Validators Module', () => {
