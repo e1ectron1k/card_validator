@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Валидатор банковских карт</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-credit-card"></i> Валидатор банковских карт</h1>
+            <p class="subtitle">Проверьте валидность номера карты и определите платежную систему</p>
+        </header>
+        
+        <main>
+            <div id="credit-card-widget" class="widget-container"></div>
+            
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> Информация</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-shield-alt"></i> Алгоритм Луна</h3>
+                        <p>Используется алгоритм Луна (Luhn algorithm) для проверки контрольной суммы номера карты.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-network-wired"></i> Платежные системы</h3>
+                        <p>Определяются Visa, MasterCard, Мир, American Express, Discover, JCB.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-code"></i> Технологии</h3>
+                        <p>JavaScript, Webpack, Jest, GitHub Actions, Puppeteer для E2E тестов.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="examples-section">
+                <h2><i class="fas fa-vial"></i> Тестовые карты</h2>
+                <div class="examples-grid">
+                    <div class="example-card">
+                        <h4>Visa</h4>
+                        <code>4111 1111 1111 1111</code>
+                        <p>Валидный номер для тестирования</p>
+                    </div>
+                    <div class="example-card">
+                        <h4>MasterCard</h4>
+                        <code>5555 5555 5555 4444</code>
+                        <p>Тестовый номер MasterCard</p>
+                    </div>
+                    <div class="example-card">
+                        <h4>Мир</h4>
+                        <code>2201 3820 0000 0013</code>
+                        <p>Валидная карта платежной системы Мир</p>
+                    </div>
+                    <div class="example-card">
+                        <h4>Невалидная</h4>
+                        <code>4111 1111 1111 1112</code>
+                        <p>Пример невалидного номера</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <p>© 2024 Валидатор банковских карт | 
+                    <a href="https://github.com/yourusername/credit-card-validator" target="_blank">
+                        <i class="fab fa-github"></i> GitHub
+                    </a> | 
+                    <a href="https://ru.wikipedia.org/wiki/Алгоритм_Луна" target="_blank">
+                        <i class="fab fa-wikipedia-w"></i> Алгоритм Луна
+                    </a>
+                </p>
+                <p class="footer-note">
+                    Используется только для образовательных целей. Не храните реальные номера карт.
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+</body>
+</html>
